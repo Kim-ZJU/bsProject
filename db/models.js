@@ -22,7 +22,7 @@ const userSchema = new Schema({
 
 //定义设备集合
 const deviceSchema = new Schema({
-  //userid: {} //用户的ID
+  //userid: { type: }, //用户的ID
   deviceId: { type: String, required: true },
   deviceName: { type: String, required: true },
   alert: { type: Boolean },
@@ -35,7 +35,7 @@ const deviceSchema = new Schema({
 //定义消息集合
 const messageSchema = new Schema({
   clientId: { type: String }, // 设备ID
-  alert: { type: Boolean }, // 0正常，1-告警
+  alert: { type: Boolean }, // 0-正常，1-告警
   info: { type: String }, // 上报信息
   lng: { type: Number }, // 经度
   lat: { type: Number }, // 纬度
