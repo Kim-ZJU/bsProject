@@ -26,7 +26,7 @@ router.post('/register', async function (req, res) {
     res.send({code: 1, msg: '此用户已存在'})
   } else if (username.length <= 6 || password.length <= 6) { //如果用户名和密码长度不符合要求
     res.send({code: 1, msg:'用户名和密码必须在6字节以上！'})
-  } else if(!email.match(/^\w+@\w+\.\w+$/i)) { //如果邮箱格式不对
+  } else if(!email.match(/^\w+@\w+(\.\w+)+$/i)) { //如果邮箱格式不对
     res.send({code: 1, msg: '邮箱格式不正确！'})
   } else {
     // 保存
@@ -65,7 +65,7 @@ router.get('/isLogin', function (req, res) {
 //登录的路由  
 router.post('/login', function (req, res) {
   const { username, password } = req.body
-  UserModel.findOne({ username, password: md5(password) }, filter, function (err, user) {
+  UserModel.findOne({ username: username, password: md5(password) }, filter, function (err, user) {
     if (user) { //登录成功
       req.session.userid = user._id
       res.send({ code: 0, msg: "恭喜你,登录成功!" })
@@ -107,7 +107,7 @@ router.post('/modifyDevice', function (req, res) {
   const {deviceId, deviceAttr, attrValue} = req.body;
   // 根据用户输入的设备ID在数据库中寻找
   DeviceModel.findOne({deviceId}, function (err, device) {
-    if (err) {
+    if (!device) {
       // 如果没找到，返回错误提示，代码略去
       return res.send({code: 1, msg: "设备不存在！"})
     } else {
@@ -128,6 +128,8 @@ router.post('/modifyDevice', function (req, res) {
           console.log(device)
           return res.send({code: 0, msg: '设备数据修改成功！'})
         })
+      } else{
+        return res.send({code: 1, msg: "设备属性不存在！"})
       }
     }
   })
